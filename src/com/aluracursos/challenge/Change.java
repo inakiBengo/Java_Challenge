@@ -1,4 +1,4 @@
-package src.com.aluracursos.challenge.records;
+package src.com.aluracursos.challenge;
 
 import java.text.DecimalFormat;
 

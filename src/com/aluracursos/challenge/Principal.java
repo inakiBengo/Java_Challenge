@@ -1,7 +1,4 @@
-package src.com.aluracursos.challenge.principal;
-
-import src.com.aluracursos.challenge.hooks.BuscarCambio;
-import src.com.aluracursos.challenge.records.Change;
+package src.com.aluracursos.challenge;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -34,7 +31,7 @@ public class Principal {
                 int option = input.nextInt();
 
                 if (option > 8 || option < 1) {
-                    System.out.println("Error: debe pasar un numero entre 1 y 7");
+                    System.out.println("Error: debe pasar un numero entre 1 y 8");
                     continue;
                 }
 
