@@ -3,12 +3,17 @@ package src.com.aluracursos.challenge.principal;
 import src.com.aluracursos.challenge.hooks.BuscarCambio;
 import src.com.aluracursos.challenge.records.Change;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Principal {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
+        List<String> historial = new ArrayList<>();
         String message = """
                 *************************************
                 1) Dólar           → Peso Argentino
@@ -17,7 +22,8 @@ public class Principal {
                 4) Real Brasileño  → Dólar
                 5) Dólar           → Peso Colombiano
                 6) Peso Colombiano → Dólar
-                7) Salir
+                7) Ver el historial
+                8) Salir
                 Elija una opción valida, un numero
                 del 1 al 7.
                 *************************************
@@ -27,42 +33,48 @@ public class Principal {
                 System.out.println(message);
                 int option = input.nextInt();
 
-                if (option > 7 || option < 1) {
+                if (option > 8 || option < 1) {
                     System.out.println("Error: debe pasar un numero entre 1 y 7");
-                    return;
+                    continue;
                 }
 
-                if (option == 7) {
+                if (option == 8) {
                     System.out.println("Que tenga un buen dia.");
                     break;
                 }
 
+                if (option == 7) {
+                    if (!historial.isEmpty()) {
+                        System.out.println("Historial:");
+                        for (String item : historial) {
+                            System.out.println(item);
+                        }
+                    } else {
+                        System.out.println("El historial esta vacío.");
+                    }
+                    continue;
+                }
+
                 System.out.println("Ingrese un valor que quiera convertir");
-                int money = input.nextInt();
+                var money = input.nextDouble();
 
                 if (option == 1) {
-                    Change result = BuscarCambio.cambio("USD", "ARS");
-                    System.out.println(result.calculateChange(money));
+                    convertir("USD", "ARS", historial, money);
                 }
                 if (option == 2) {
-                    Change result = BuscarCambio.cambio("ARS", "USD");
-                    System.out.println(result.calculateChange(money));
+                    convertir("ARS", "USD", historial, money);
                 }
                 if (option == 3) {
-                    Change result = BuscarCambio.cambio("USD", "BRL");
-                    System.out.println(result.calculateChange(money));
+                    convertir("USD", "BRL", historial, money);
                 }
                 if (option == 4) {
-                    Change result = BuscarCambio.cambio("BRL", "USD");
-                    System.out.println(result.calculateChange(money));
+                    convertir("BRL", "USD", historial, money);
                 }
                 if (option == 5) {
-                    Change result = BuscarCambio.cambio("USD", "COP");
-                    System.out.println(result.calculateChange(money));
+                    convertir("USD", "COP", historial, money);
                 }
                 if (option == 6) {
-                    Change result = BuscarCambio.cambio("COP", "USD");
-                    System.out.println(result.calculateChange(money));
+                    convertir("COP", "USD", historial, money);
                 }
             }
         } catch (InputMismatchException err) {
@@ -71,5 +83,15 @@ public class Principal {
         catch (RuntimeException err){
             System.out.println(err.getMessage());
         }
+    }
+    private static void convertir(String fromCurrency, String toCurrency, List<String> historial, double money) {
+        String result = BuscarCambio
+                .cambio(fromCurrency, toCurrency)
+                .calculateChange(money);
+        LocalDateTime time = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy | HH:mm | ");
+        String formattedDateTime = time.format(formatter);
+        historial.add(formattedDateTime + result);
+        System.out.println(result);
     }
 }
